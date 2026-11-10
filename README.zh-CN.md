@@ -22,6 +22,11 @@
   <img alt="1800 帧 0 漏拍" src="assets/badges/zero-drops.svg">
   <img alt="零依赖，只用标准库" src="assets/badges/stdlib-only.svg">
   <img alt="不需要 Wayland" src="assets/badges/no-wayland.svg">
+  <img alt="tty2 原生" src="assets/badges/tty2-native.svg">
+  <img alt="零遥测" src="assets/badges/telemetry-zero.svg">
+  <img alt="不用 CUDA" src="assets/badges/no-cuda.svg">
+  <img alt="只在一台机器上测过" src="assets/badges/one-machine.svg">
+  <img alt="提交信息不吹牛" src="assets/badges/commits-honest.svg">
   <img alt="PolyForm 非商业许可" src="assets/badges/license-polyform-nc.svg">
 </p>
 

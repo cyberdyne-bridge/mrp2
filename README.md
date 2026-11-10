@@ -21,8 +21,13 @@
   <img alt="C11" src="assets/badges/c-c11.svg">
   <img alt="KMS at 120 Hz" src="assets/badges/kms-120hz.svg">
   <img alt="0 dropped flips out of 1800" src="assets/badges/zero-drops.svg">
-  <img alt="No dependencies beyond the standard library" src="assets/badges/stdlib-only.svg">
+  <img alt="Only the standard library" src="assets/badges/stdlib-only.svg">
   <img alt="Wayland not required" src="assets/badges/no-wayland.svg">
+  <img alt="Native on tty2" src="assets/badges/tty2-native.svg">
+  <img alt="Zero telemetry" src="assets/badges/telemetry-zero.svg">
+  <img alt="No CUDA" src="assets/badges/no-cuda.svg">
+  <img alt="Tested on one machine" src="assets/badges/one-machine.svg">
+  <img alt="Honest commits" src="assets/badges/commits-honest.svg">
   <img alt="PolyForm Noncommercial license" src="assets/badges/license-polyform-nc.svg">
 </p>
 
