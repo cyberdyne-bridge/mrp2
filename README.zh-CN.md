@@ -14,6 +14,18 @@
 
 **把 120 Hz 直接写进 KMS。**
 
+<p align="center">
+  <img alt="EACCES Certified" src="assets/badges/eacces-certified.svg">
+  <img alt="Python 3.10+" src="assets/badges/python-3.10.svg">
+  <img alt="C11" src="assets/badges/c-c11.svg">
+  <img alt="KMS 120 Hz" src="assets/badges/kms-120hz.svg">
+  <img alt="1800 帧 0 漏拍" src="assets/badges/zero-drops.svg">
+  <img alt="零依赖，只用标准库" src="assets/badges/stdlib-only.svg">
+  <img alt="不需要 Wayland" src="assets/badges/no-wayland.svg">
+  <img alt="PolyForm 非商业许可" src="assets/badges/license-polyform-nc.svg">
+  <img alt="Linux x86-64" src="assets/badges/platform-linux.svg">
+</p>
+
 不经过 Wayland、不经过 X、不经过桌面合成器——一个用户态进程拿 DRM master，
 自己算脏区、自己搬像素、自己 page flip 到屏幕。
 
@@ -173,7 +185,7 @@ protocol/   MRP2 协议与参考实现（Python + C）
 ladder/     阶段 1–13 的代码、脚本、资源、原始结果
 previews/   渲染预览图（1920×1080）
 docs/       实测数据汇总、交付说明
-assets/     本 README 的红字横幅
+assets/     禁止商用横幅与徽章
 ```
 
 ## 校验

@@ -15,6 +15,18 @@
 
 **Putting 120 Hz straight into KMS.**
 
+<p align="center">
+  <img alt="EACCES Certified" src="assets/badges/eacces-certified.svg">
+  <img alt="Python 3.10+" src="assets/badges/python-3.10.svg">
+  <img alt="C11" src="assets/badges/c-c11.svg">
+  <img alt="KMS at 120 Hz" src="assets/badges/kms-120hz.svg">
+  <img alt="0 dropped flips out of 1800" src="assets/badges/zero-drops.svg">
+  <img alt="No dependencies beyond the standard library" src="assets/badges/stdlib-only.svg">
+  <img alt="Wayland not required" src="assets/badges/no-wayland.svg">
+  <img alt="PolyForm Noncommercial license" src="assets/badges/license-polyform-nc.svg">
+  <img alt="Linux x86-64" src="assets/badges/platform-linux.svg">
+</p>
+
 No Wayland. No X. No desktop compositor. A userspace process grabs DRM master,
 computes its own damage rectangles, moves its own pixels, and page-flips them to the panel.
 
@@ -183,7 +195,7 @@ protocol/   MRP2 protocol and reference implementations (Python + C)
 ladder/     stages 1–13: code, scripts, assets, raw results
 previews/   1920×1080 render previews
 docs/       measured data, delivery notes
-assets/     the red banner used by this README
+assets/     the non-commercial banner and the badges used by this README
 ```
 
 ## Checksums
