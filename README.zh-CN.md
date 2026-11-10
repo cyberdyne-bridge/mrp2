@@ -23,7 +23,6 @@
   <img alt="零依赖，只用标准库" src="assets/badges/stdlib-only.svg">
   <img alt="不需要 Wayland" src="assets/badges/no-wayland.svg">
   <img alt="PolyForm 非商业许可" src="assets/badges/license-polyform-nc.svg">
-  <img alt="Linux x86-64" src="assets/badges/platform-linux.svg">
 </p>
 
 不经过 Wayland、不经过 X、不经过桌面合成器——一个用户态进程拿 DRM master，

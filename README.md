@@ -24,7 +24,6 @@
   <img alt="No dependencies beyond the standard library" src="assets/badges/stdlib-only.svg">
   <img alt="Wayland not required" src="assets/badges/no-wayland.svg">
   <img alt="PolyForm Noncommercial license" src="assets/badges/license-polyform-nc.svg">
-  <img alt="Linux x86-64" src="assets/badges/platform-linux.svg">
 </p>
 
 No Wayland. No X. No desktop compositor. A userspace process grabs DRM master,
