@@ -28,6 +28,7 @@
   <img alt="只在一台机器上测过" src="assets/badges/one-machine.svg">
   <img alt="提交信息不吹牛" src="assets/badges/commits-honest.svg">
   <img alt="PolyForm 非商业许可" src="assets/badges/license-polyform-nc.svg">
+  <img alt="这份 README 写得过分了" src="assets/badges/readme-overkill.svg">
 </p>
 
 不经过 Wayland、不经过 X、不经过桌面合成器——一个用户态进程拿 DRM master，

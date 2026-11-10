@@ -29,6 +29,7 @@
   <img alt="Tested on one machine" src="assets/badges/one-machine.svg">
   <img alt="Honest commits" src="assets/badges/commits-honest.svg">
   <img alt="PolyForm Noncommercial license" src="assets/badges/license-polyform-nc.svg">
+  <img alt="This README is overkill" src="assets/badges/readme-overkill.svg">
 </p>
 
 No Wayland. No X. No desktop compositor. A userspace process grabs DRM master,
