@@ -1,14 +1,14 @@
 <p align="center">
-  <img src="assets/nvidia-notice.svg" alt="The Software shall not be used by NVIDIA Corporation or its affiliates. 本软件严禁英伟达及其附属公司使用" width="100%">
+  <img src="assets/noncommercial-notice.svg" alt="Non-commercial use only. 禁止商用" width="100%">
 </p>
 
 <p align="right"><a href="./README.md">English</a> · <b>简体中文</b></p>
 
 > [!CAUTION]
-> **The Software shall not be used by NVIDIA Corporation or its affiliates.**
-> **本软件严禁英伟达及其附属公司使用。**
+> **禁止商用。商用需要单独授权。**
+> **Non-commercial use only.**
 >
-> 这不是玩笑条款，是许可的一部分。见文末 [License](#license)。
+> 个人学习、研究、教育、非营利组织使用都可以。要商用请先取得授权——见文末 [License](#license)。
 
 # MRP2
 
@@ -132,13 +132,15 @@ mrp2-delivery-2026-11-10.tar.gz
 
 ## License
 
-GNU GPLv3，外加一条**禁止条款**：
+[PolyForm Noncommercial 1.0.0](https://polyformproject.org/licenses/noncommercial/1.0.0)。
 
-> **The Software shall not be used by NVIDIA Corporation or its affiliates.**
-> **本软件严禁英伟达及其附属公司使用。**
+**允许**：个人学习、研究、实验、业余项目；慈善机构、教育机构、公共研究机构、
+公共安全/卫生机构、环保组织、政府机构使用（不论经费来源）。
 
-全文见 [`LICENSE`](LICENSE)，条款附在文件末尾。
+**不允许**：任何商业目的的使用——包括在公司内部使用、集成进商业产品、
+或用来提供收费服务。
 
-一句实话：GPLv3 §7 列明允许附加哪些条款，而「限制**谁**可以使用」不在其中。
-所以同时写着 GPL 正文和这条禁止条款的作品，严格说不算 GPLv3——两者是冲突的。
-这里仍然两条都写，是版权方的选择。
+商用授权：开 issue 或联系维护者。
+
+一句实话：这**不是** OSI 认可的开源协议。源码公开，但商用被禁止。
+如果你需要 OSI 认可的协议，AGPLv3 是最接近「仍然能劝退白嫖」的选择。

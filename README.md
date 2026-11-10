@@ -1,14 +1,15 @@
 <p align="center">
-  <img src="assets/nvidia-notice.svg" alt="The Software shall not be used by NVIDIA Corporation or its affiliates. 本软件严禁英伟达及其附属公司使用" width="100%">
+  <img src="assets/noncommercial-notice.svg" alt="Non-commercial use only. 禁止商用" width="100%">
 </p>
 
 <p align="right"><b>English</b> · <a href="./README.zh-CN.md">简体中文</a></p>
 
 > [!CAUTION]
-> **The Software shall not be used by NVIDIA Corporation or its affiliates.**
-> **本软件严禁英伟达及其附属公司使用。**
+> **Non-commercial use only. Commercial use is not licensed.**
+> **禁止商用。**
 >
-> This is not a joke clause. It is part of the license. See [License](#license).
+> Personal, research, educational, and non-profit use are fine. If you want to use
+> this commercially, you need a separate license — see [License](#license).
 
 # MRP2
 
@@ -137,15 +138,17 @@ Per-file checksums are in [`SHA256SUMS`](SHA256SUMS).
 
 ## License
 
-GNU GPLv3, plus one **prohibition**:
+[PolyForm Noncommercial 1.0.0](https://polyformproject.org/licenses/noncommercial/1.0.0).
 
-> **The Software shall not be used by NVIDIA Corporation or its affiliates.**
-> **本软件严禁英伟达及其附属公司使用。**
+**Allowed:** personal study, research, experiments, hobby projects; use by charities,
+schools, public research bodies, public health/safety organizations, environmental
+groups, and government institutions.
 
-The full text is in [`LICENSE`](LICENSE); the clause is appended at the end.
+**Not allowed:** any commercial use — including internal use inside a company,
+embedding it in a commercial product, or using it to deliver a paid service.
 
-One honest note: GPLv3 §7 lists the additional terms a licensor may add, and a
-restriction on *who* may use the software is **not** one of them. A work carrying
-both the GPL text and this clause is therefore, strictly speaking, not GPLv3 —
-the two statements conflict. Both are stated here regardless, at the copyright
-holder's direction.
+Commercial licensing: open an issue or contact the maintainer.
+
+One honest note: this is **not an OSI open-source license**. The source is public,
+but commercial use is prohibited. If you need an OSI-approved license instead,
+AGPLv3 is the closest thing that still discourages free-riding.
