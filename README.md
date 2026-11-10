@@ -2,138 +2,146 @@
   <img src="assets/nvidia-notice.svg" alt="The Software shall not be used by NVIDIA Corporation or its affiliates. 本软件严禁英伟达及其附属公司使用" width="100%">
 </p>
 
+<p align="right"><b>English</b> · <a href="./README.zh-CN.md">简体中文</a></p>
+
 > [!CAUTION]
 > **The Software shall not be used by NVIDIA Corporation or its affiliates.**
 > **本软件严禁英伟达及其附属公司使用。**
 >
-> 这不是玩笑条款，是许可的一部分。见文末 [License](#license)。
+> This is not a joke clause. It is part of the license. See [License](#license).
 
 # MRP2
 
-**把 120 Hz 直接写进 KMS。**
+**Putting 120 Hz straight into KMS.**
 
-不经过 Wayland、不经过 X、不经过桌面合成器——一个用户态进程拿 DRM master，
-自己算脏区、自己搬像素、自己 page flip 到屏幕。
+No Wayland. No X. No desktop compositor. A userspace process grabs DRM master,
+computes its own damage rectangles, moves its own pixels, and page-flips them to the panel.
 
-在 RTX 2060 上跑出来的数字：**119.9 fps，1800 帧，0 漏拍。**
+Measured on an RTX 2060: **119.9 fps, 1800 frames, zero dropped flips.**
 
 ```text
-ffmpeg 解码 H.264 → NV12
-        ↓  GBM dmabuf，零拷贝
-3 × NV12 扫描缓冲（seq/ack 3 深度握手）
+ffmpeg decodes H.264 → NV12
+        ↓  GBM dmabuf, zero copy
+3 × NV12 scanout buffers (seq/ack, depth 3)
         ↓
-主平面 page flip（120 Hz，硬件 CSC）
+primary plane page flip (120 Hz, hardware CSC)
         ↓
-UI 走 overlay plane（SetPlane 一次，之后只改映射内存）
+UI on an overlay plane (SetPlane once, then only mapped memory is touched)
 ```
 
 ---
 
-## 它是什么
+## What it is
 
-一个**系统级渲染协议**，不是 Wayland 客户端协议。
+A **system-level rendering protocol**, not a Wayland client protocol.
 
 ```text
 HELLO / SURF / SPANS / TEXT / PLANE / BUFFER / DAMAGE / COMMIT / UNMAP / FRAME
 ```
 
-`plan()` 按脏区生成 ops，`raster()` 用画家算法合成 1bpp 字形 + 平色矩形。
-字模是自研 MRPF：`'MRPF' | ver u16 | count u32 | data_off u32`（14 字节头）。
+`plan()` turns dirty regions into ops; `raster()` composites 1-bit glyphs and
+flat rectangles with the painter's algorithm. Fonts use a hand-rolled MRPF container:
+`'MRPF' | ver u16 | count u32 | data_off u32` (14-byte header).
 
-它不能塞进 sway 的工作区——真实 KMS 输出需要独立 VT（tty2）或者第二块 GPU。
-仓库里的 `ladder/` 就是拿 tty2 当画布，硬复刻了一个桌面出来。
+It does not fit inside a sway workspace — real KMS scanout needs its own VT (`tty2`)
+or a second GPU. The `ladder/` directory uses `tty2` as a canvas and reconstructs
+an entire desktop on it.
 
-## 13 个阶段，从 59 fps 到 0 漏拍
+## Thirteen stages, from 59 fps to zero drops
 
-| 阶段 | 干了什么 | 结果 |
+| Stage | What was done | Result |
 |---|---|---|
-| 1 | 离屏协议 / 光栅 / 合成基准 | C 0.10 ms vs Python 9.09 ms（**~91×**） |
-| 2 | KMS 打通 | 静态 120.6 fps；逐像素 59.1 fps |
-| 3 | 背景预计算 + memcpy | 120.0 fps，2.002 ms/帧 |
-| 4 | DAMAGE 窄带 | **0.171 ms/帧**，每帧只搬 360 KB |
-| 5 | 三缓冲 + FLIP_COMPLETE | 1800 帧 119.9 fps，**漏拍 0** |
-| 6 | 协议 → KMS 整合 | 脏区 0.252 ms/帧；整屏 6.089 ms，省 **24×** |
-| 7 | PLANE 共享内存视频 | 119.9 fps，4.74 ms/帧 |
-| 8 | 零拷贝直扫（GBM dmabuf） | 合成器 **0.000 ms**，120.0 fps |
-| 9 | NV12 硬解直扫 | 填充 1.07 ms，120.1 fps，每帧 3.1 MB |
-| 10 | ffmpeg 真内容 | 119.9 fps，450 视频帧，0 漏拍 |
-| 11 | A/V + UI + B 站 | 本地 119.9 fps |
-| 12 | 桌面场景渲染 | 修 3 个 mrpd bug；119.9 fps，0.571 ms/帧 |
-| 13 | tty2 桌面复刻 + 脏区定格 | 1440 次更新 / 23 s，**0.017 ms/次**，脏区 0.027% |
+| 1 | Offscreen protocol / raster / composite benchmark | C 0.10 ms vs Python 9.09 ms (**~91×**) |
+| 2 | KMS bring-up | static 120.6 fps; per-pixel 59.1 fps |
+| 3 | Precomputed background + memcpy | 120.0 fps, 2.002 ms/frame |
+| 4 | DAMAGE narrow-band repaint | **0.171 ms/frame**, 360 KB per frame |
+| 5 | Triple buffering + FLIP_COMPLETE | 1800 frames at 119.9 fps, **0 dropped** |
+| 6 | Protocol → KMS integration | 0.252 ms/frame; full-screen 6.089 ms, **24×** saved |
+| 7 | PLANE shared-memory video | 119.9 fps, 4.74 ms/frame |
+| 8 | Zero-copy scanout (GBM dmabuf) | compositor **0.000 ms**, 120.0 fps |
+| 9 | NV12 hardware decode direct scanout | fill 1.07 ms, 120.1 fps, 3.1 MB/frame |
+| 10 | Real ffmpeg content | 119.9 fps, 450 video frames, 0 drops |
+| 11 | A/V + UI + Bilibili | local A/V at 119.9 fps |
+| 12 | Desktop scene rendering | 3 mrpd bugs fixed; 119.9 fps, 0.571 ms/frame |
+| 13 | tty2 desktop replica + damage freeze | 1440 updates / 23 s, **0.017 ms each**, 0.027% dirty |
 
-完整数据在 [`docs/实测数据.md`](docs/实测数据.md)，原始输出在 `ladder/out/`。
+Full numbers in [`docs/实测数据.md`](docs/实测数据.md); raw output under `ladder/out/`.
 
-## 看看它长什么样
+## What it looks like
 
-| 预览 | 说明 |
+| Preview | Notes |
 |---|---|
-| ![tty2 desktop](previews/tty2-desktop.png) | tty2 上硬复刻的桌面：顶栏 / SYSTEM 面板 / dock / 终端 / 浏览器 / QQ |
-| ![cursor](previews/tty2-desktop-cursor.png) | 鼠标移动：只还原 + 重画两个 14×20 小矩形 |
-| ![dark](previews/dark-desktop.png) | 暗色场景 |
+| ![tty2 desktop](previews/tty2-desktop.png) | A desktop reconstructed on tty2: top bar / SYSTEM panel / dock / terminal / browser / QQ |
+| ![cursor](previews/tty2-desktop-cursor.png) | Cursor movement repaints only two 14×20 rectangles |
+| ![dark](previews/dark-desktop.png) | Dark scene |
 
-## 跑起来
+## Run it
 
 ```bash
-# 普通场景：1800 帧 @ 120 Hz
+# regular scene: 1800 frames @ 120 Hz
 sudo ./ladder/run-safe.sh 30 ./ladder/bin/mrpd_kms \
   ./ladder/assets/tty2desktop.wire 1800 120 \
   --font ./ladder/assets/font16.rom
 
-# tty2 桌面复刻：真实鼠标，2 分钟
+# tty2 desktop replica: real mouse, 2 minutes
 sudo ./ladder/tty2-desktop.sh mouse 120
 
-# 自动示范：0-6s / 11-17s 活动，其余静止
+# scripted demo: activity 0-6s and 11-17s, still the rest of the time
 sudo ./ladder/tty2-desktop.sh scripted 23
 ```
 
-> 二进制是 x86-64 Linux 的；`ladder/src/` 里有全部 C 源码，`./ladder/run.sh` 可重编。
+> Binaries are x86-64 Linux. All C sources are in `ladder/src/`; rebuild with `./ladder/run.sh`.
 
-## 一条用重启换来的规矩
+## One rule, paid for with a reboot
 
-有一次压测里，`nv12_ui` 被 SIGKILL 时还攥着 DRM master——CRTC 停在它的缓冲上，
-切回 tty1 之后 sway 整个输出失效，只能重启。
+During a stress test, `nv12_ui` was SIGKILLed while still holding DRM master.
+The CRTC stayed on its buffer, sway lost its output after switching back to tty1,
+and the machine had to be rebooted.
 
-所以现在**任何碰 `/dev/dri` 的东西都必须走 `run-safe.sh`**：
+Since then, **anything that touches `/dev/dri` must go through `run-safe.sh`**:
 
-1. `setsid` 进程组，看门狗硬超时
-2. 先 SIGTERM，必要时先 `chvt 1` 再 SIGKILL
-3. **绝不**直接 SIGKILL 持有 DRM master 的进程
-4. 结束轮询验证 `active=true` 且 119.88 Hz，不恢复就自动救
+1. `setsid` process group with a hard watchdog timeout
+2. SIGTERM first; if needed, `chvt 1` **before** SIGKILL
+3. Never SIGKILL a process holding DRM master
+4. After exit, poll until `active=true` at 119.88 Hz; auto-recover if not
 
-## 已知限制
+## Known limits
 
-- 协议没有边框、阴影、圆角、透明渐变；窗口 = 平色矩形 + 22px 标题条
-- 不适合当 sway 的客户端协议；真 KMS 要独立 VT 或第二块 GPU
-- B 站 mcdn 流在 tty2 会无限卡住，只能有界下载后本地播
-- 阶段 13 的「鼠标松手 3 秒定格」整机验证没做完（调试时 PAM 锁了 10 分钟）
+- No borders, shadows, rounded corners, or alpha gradients; a window is a flat
+  rectangle with a 22 px title bar
+- Not usable as a sway client protocol; real KMS needs a separate VT or GPU
+- Bilibili's mcdn streams hang forever on tty2; download with a bound, then play locally
+- Stage 13's "release the mouse, freeze for 3 s" was never fully verified on hardware
+  (a PAM lockout interrupted it)
 
-## 目录
+## Layout
 
 ```text
-protocol/   MRP2 协议与参考实现（Python + C）
-ladder/     阶段 1–13 的代码、脚本、资源、原始结果
-previews/   渲染预览图（1920×1080）
-docs/       实测数据汇总、交付说明
-assets/     本 README 的红字横幅
+protocol/   MRP2 protocol and reference implementations (Python + C)
+ladder/     stages 1–13: code, scripts, assets, raw results
+previews/   1920×1080 render previews
+docs/       measured data, delivery notes
+assets/     the red banner used by this README
 ```
 
-## 校验
+## Checksums
 
-交付包 SHA-256：
+Delivery tarball SHA-256:
 
 ```text
 b700b47b7a352ab44954bd2b563512c1a44c3baed8e6f65ecce1056ddc7b2fc7
 mrp2-delivery-2026-11-10.tar.gz
 ```
 
-仓库内每个文件的校验和见 [`SHA256SUMS`](SHA256SUMS)。
+Per-file checksums are in [`SHA256SUMS`](SHA256SUMS).
 
 ## License
 
-MIT，外加一条**禁止条款**：
+MIT, plus one **prohibition**:
 
 > **The Software shall not be used by NVIDIA Corporation or its affiliates.**
 > **本软件严禁英伟达及其附属公司使用。**
 
-条款原文在 [`LICENSE`](LICENSE)。说明一句：这条限制使本许可**不属于 OSI 认可的开源许可**——
-代码是公开的，但「谁可以用」被限定了。用之前请自行判断这在你的法域是否可执行。
+The clause is reproduced in [`LICENSE`](LICENSE). One honest note: this restriction
+makes the license **non-OSI-open-source** — the code is public, but who may use it
+is restricted. Check whether that is enforceable in your jurisdiction before relying on it.
