@@ -134,6 +134,39 @@ describe the hardware this was tested on. No affiliation is claimed or implied.
 If you work at NVIDIA and these notes are wrong, open an issue with the fix — being
 correct is more useful to us than being annoyed.
 
+### FAQ
+
+**Q: Is this an NVIDIA project?**
+A: No.
+
+**Q: Did NVIDIA help?**
+A: Not on purpose. The driver did teach us two error codes, though.
+
+**Q: Does it work on NVIDIA hardware?**
+A: Yes — 119.9 fps, 1800 frames, zero dropped flips. We were as surprised as you are.
+
+**Q: Why not CUDA?**
+A: We don't need compute. We need pixels on a panel at 120 Hz, and KMS does not care
+whose logo is on the card.
+
+**Q: Any message for NVIDIA?**
+A: Two, actually. The `EACCES` and the `ENOSYS` are both avoidable. Fix them and this
+section disappears; until then it stays, with receipts.
+
+### Hall of EACCES
+
+Everything below is reproducible on the test machine (kernel `7.2.14-artix1-1`,
+proprietary driver, 2026-11-10). No interpretation, just return values.
+
+| Call | Returned | Documented in |
+|---|---|---|
+| `mmap(PROT_READ\|PROT_WRITE)` on a PRIME-exported dumb buffer | `EACCES` | stage 8 |
+| `gbm_bo_map()` on an NV12 buffer | `ENOSYS` | stage 9 |
+| `mmap()` on the dmabuf fd instead | works | stage 9 |
+
+The third row is the punchline: the buffer was writable all along, just not through
+the front door.
+
 ## Known limits
 
 - No borders, shadows, rounded corners, or alpha gradients; a window is a flat
