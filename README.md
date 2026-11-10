@@ -137,11 +137,15 @@ Per-file checksums are in [`SHA256SUMS`](SHA256SUMS).
 
 ## License
 
-MIT, plus one **prohibition**:
+GNU GPLv3, plus one **prohibition**:
 
 > **The Software shall not be used by NVIDIA Corporation or its affiliates.**
 > **本软件严禁英伟达及其附属公司使用。**
 
-The clause is reproduced in [`LICENSE`](LICENSE). One honest note: this restriction
-makes the license **non-OSI-open-source** — the code is public, but who may use it
-is restricted. Check whether that is enforceable in your jurisdiction before relying on it.
+The full text is in [`LICENSE`](LICENSE); the clause is appended at the end.
+
+One honest note: GPLv3 §7 lists the additional terms a licensor may add, and a
+restriction on *who* may use the software is **not** one of them. A work carrying
+both the GPL text and this clause is therefore, strictly speaking, not GPLv3 —
+the two statements conflict. Both are stated here regardless, at the copyright
+holder's direction.

@@ -132,10 +132,13 @@ mrp2-delivery-2026-11-10.tar.gz
 
 ## License
 
-MIT，外加一条**禁止条款**：
+GNU GPLv3，外加一条**禁止条款**：
 
 > **The Software shall not be used by NVIDIA Corporation or its affiliates.**
 > **本软件严禁英伟达及其附属公司使用。**
 
-条款原文在 [`LICENSE`](LICENSE)。说明一句：这条限制使本许可**不属于 OSI 认可的开源许可**——
-代码是公开的，但「谁可以用」被限定了。用之前请自行判断这在你的法域是否可执行。
+全文见 [`LICENSE`](LICENSE)，条款附在文件末尾。
+
+一句实话：GPLv3 §7 列明允许附加哪些条款，而「限制**谁**可以使用」不在其中。
+所以同时写着 GPL 正文和这条禁止条款的作品，严格说不算 GPLv3——两者是冲突的。
+这里仍然两条都写，是版权方的选择。
