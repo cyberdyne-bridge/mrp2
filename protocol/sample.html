@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<title>週報 #12：把瀏覽器拆成三段</title>
+<style>body{font:16px/1.7 system-ui;margin:0 auto;max-width:42rem}</style>
+<script>window.__HYDRATE__={"nav":"這串不該出現在正文裡","ads":[1,2,3]};</script>
+</head>
+<body>
+<header class="site-head">
+  <div class="logo">魚書館</div>
+  <nav><a href="/">首頁</a> <a href="/archive">歸檔</a> <a href="/about">關於</a></nav>
+</header>
+<main>
+<article>
+  <h1>週報 #12：把瀏覽器拆成三段</h1>
+  <p>這期講一件小事：<strong>抓頁</strong>、<em>過濾</em>、排版，三段其實可以拆開做。順手記一下 <code>html.parser</code> 的坑。</p>
+  <h2>一、為什麼要過濾</h2>
+  <p>直接拿正則剝標籤，結果是段落黏成一坨、選單跑到正文前面，<a href="https://www.w3.org/TR/CSS22/">規範文件</a>裡的註解還全留著。</p>
+  <blockquote>過濾器的價值不在「刪掉標籤」，而在「決定什麼算一段話」。</blockquote>
+  <ul>
+    <li>塊級：p／li／h1-h6／blockquote／pre／table</li>
+    <li>行內：b／i／code／a
+      <ul><li>巢狀清單要縮排</li><li>超長網址要硬切</li></ul>
+    </li>
+    <li>要丟：script／style／nav／footer</li>
+  </ul>
+  <h2>二、解碼器不是重點</h2>
+  <p>影片丟給外部播放器就好，頁面上掛著兩段：</p>
+  <video src="/media/demo.mp4" poster="/media/demo.jpg"></video>
+  <audio src="/media/podcast.mp3"></audio>
+  <pre><code>fetch -> filter -> layout -> render
+             \-> mpv（媒體外掛）</code></pre>
+  <h2>三、對照表</h2>
+  <table>
+    <tr><th>層</th><th>輸入</th><th>輸出</th></tr>
+    <tr><td>過濾</td><td>HTML</td><td>塊串列</td></tr>
+    <tr><td>排版</td><td>塊串列</td><td>行串列</td></tr>
+  </table>
+  <p>參考：<a href="https://www.w3.org/TR/CSS22/visuren.html">CSS 2.2 視覺格式化模型</a>、<a href="https://html.spec.whatwg.org/">WHATWG HTML</a>。</p>
+</article>
+</main>
+<footer><p>© 2026 魚書館 · <a href="/rss">RSS</a></p></footer>
+</body>
+</html>

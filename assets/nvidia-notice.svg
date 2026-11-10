@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 132" width="1200" height="132" role="img"
+     aria-label="The Software shall not be used by NVIDIA Corporation or its affiliates. 本软件严禁英伟达及其附属公司使用">
+  <rect x="2" y="2" width="1196" height="128" rx="10"
+        fill="#e5484d" fill-opacity="0.10" stroke="#e5484d" stroke-width="3"/>
+  <rect x="2" y="2" width="10" height="128" rx="4" fill="#e5484d"/>
+  <text x="40" y="52" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif"
+        font-size="25" font-weight="700" fill="#e5484d">The Software shall not be used by NVIDIA Corporation or its affiliates.</text>
+  <text x="40" y="98" font-family="'Noto Sans CJK SC', 'PingFang SC', 'Microsoft YaHei', sans-serif"
+        font-size="26" font-weight="700" fill="#e5484d">本软件严禁英伟达及其附属公司使用</text>
+</svg>
