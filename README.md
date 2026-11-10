@@ -106,6 +106,34 @@ Since then, **anything that touches `/dev/dri` must go through `run-safe.sh`**:
 3. Never SIGKILL a process holding DRM master
 4. After exit, poll until `active=true` at 119.88 Hz; auto-recover if not
 
+## A note on NVIDIA
+
+This project exists because a machine with an RTX 2060 was sitting there and could do
+120 Hz. That is the whole endorsement.
+
+While writing a renderer that talks to KMS directly, the proprietary driver made us
+solve three riddles. All three are reproducible, and all three are documented in
+`ladder/` rather than in a support ticket:
+
+| What we asked for | What we got | Workaround |
+|---|---|---|
+| RW `mmap` on a PRIME-exported dumb buffer | `EACCES` — read-only mapping only | allocate through GBM instead |
+| `gbm_bo_map` on an NV12 buffer | `ENOSYS` | `mmap` the dmabuf fd directly |
+| a clean exit after a crashed DRM master | CRTC parked on a dead buffer, `sway` output gone, reboot | `run-safe.sh`, and never SIGKILL a DRM master holder |
+
+To be fair: the third one is our bug, not theirs — we killed the process. The first two
+are just the shape of the API, and once you know the shape, 120 Hz works fine.
+
+None of this is a benchmark of NVIDIA's engineering, and it is not a verdict on the
+driver. It is a list of walls we hit, published so the next person doesn't hit them too.
+
+**NVIDIA has not endorsed, sponsored, or reviewed this project.**
+"NVIDIA", "RTX", and "GeForce" are trademarks of NVIDIA Corporation, used here only to
+describe the hardware this was tested on. No affiliation is claimed or implied.
+
+If you work at NVIDIA and these notes are wrong, open an issue with the fix — being
+correct is more useful to us than being annoyed.
+
 ## Known limits
 
 - No borders, shadows, rounded corners, or alpha gradients; a window is a flat

@@ -102,6 +102,32 @@ sudo ./ladder/tty2-desktop.sh scripted 23
 3. **绝不**直接 SIGKILL 持有 DRM master 的进程
 4. 结束轮询验证 `active=true` 且 119.88 Hz，不恢复就自动救
 
+## 关于 NVIDIA
+
+这个项目存在，是因为手边正好有台带 RTX 2060 的机器，而且它能跑 120 Hz。这就是全部的「背书」。
+
+在写一个直接跟 KMS 打交道的渲染器时，专有驱动让我们解了三道谜题。三条都可复现，
+而且都记在 `ladder/` 里，而不是记在工单里：
+
+| 我们想要的 | 实际拿到的 | 绕法 |
+|---|---|---|
+| 对 PRIME 导出的 dumb buffer 做读写 `mmap` | `EACCES`，只给只读映射 | 改走 GBM 分配 |
+| 对 NV12 buffer 调 `gbm_bo_map` | `ENOSYS` | 直接 `mmap` dmabuf fd |
+| DRM master 崩了之后干净退出 | CRTC 停在死缓冲上，sway 输出消失，只能重启 | `run-safe.sh`，且绝不 SIGKILL 持有 DRM master 的进程 |
+
+公道地说：第三条是我们的 bug，不是他们的——是我们把它杀了。前两条只是 API 的形状，
+知道形状之后，120 Hz 跑得好好的。
+
+这不是对 NVIDIA 工程能力的评测，也不是对驱动的判决。它只是一张「我们撞过的墙」的清单，
+公开出来，下一个人别再撞一遍。
+
+**NVIDIA 未对本项目背书、赞助或审阅。**
+"NVIDIA"、"RTX"、"GeForce" 是 NVIDIA Corporation 的商标，此处仅用于说明测试所用硬件，
+不声称也不暗示任何隶属关系。
+
+如果你在 NVIDIA 工作、发现这些记录有误，欢迎开 issue 指正——对我们来说，
+「你是对的」比「你生气了」有用。
+
 ## 已知限制
 
 - 协议没有边框、阴影、圆角、透明渐变；窗口 = 平色矩形 + 22px 标题条
